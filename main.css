@@ -1,0 +1,183 @@
+/* Общие стили */
+body {
+  background-color: #121212;
+  color: #E0E0E0;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100vh;
+}
+
+/* Основной контейнер для двух колонок */
+.main-container {
+  display: flex;
+  gap: 20px;
+  max-width: 1100px;
+  width: 100%;
+}
+
+/* Левая колонка */
+.left-column {
+  flex: 1;
+  max-width: 40%;
+}
+
+/* Правая колонка */
+.right-column {
+  flex: 2;
+  max-width: 100%;
+}
+
+/* Заголовок */
+.header {
+  text-align: center;
+  padding: 20px;
+  background-color: #1E1E1E;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  margin-bottom: 20px;
+}
+
+/* Название */
+.header h1 {
+  margin: 0;
+  font-size: 22px;
+  color: #FFD700;
+}
+
+/* Контейнер для кнопок */
+.BossController {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+/* Кнопки */
+.BossController button, 
+#bossTable button {
+  background-color: #333333;
+  color: #FFFFFF;
+  border: 1px solid #555555;
+  padding: 10px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Меньшие кнопки в таблице */
+#bossTable button {
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 4px;
+}
+
+/* Ховер эффект */
+.BossController button:hover,
+#bossTable button:hover {
+  background-color: #444444;
+}
+
+/* Анимация при нажатии */
+.BossController button:active,
+#bossTable button:active {
+  transform: scale(0.95);
+}
+
+/* Блок с ближайшими боссами */
+.bossInfo {
+  background-color: #1E1E1E;
+  color: #E0E0E0;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  font-size: 16px;
+  line-height: 1.6;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Заголовок блока */
+.bossInfo h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #FFD700;
+}
+
+/* Время выделено другим цветом */
+.bossInfo .time {
+  color: #FF6B6B;
+  font-weight: bold;
+}
+
+/* Кнопки в таблице */
+#bossTable button {
+  background-color: #333333;
+  color: #FFFFFF;
+  border: 1px solid #555555;
+  padding: 8px 12px;
+  font-size: 13px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  min-width: 100px; /* Фиксированная ширина для одинакового размера */
+  white-space: nowrap; /* Запрет на перенос */
+  text-align: center;
+}
+
+/* Ховер-эффект */
+#bossTable button:hover {
+  background-color: #444444;
+}
+
+/* Эффект при нажатии */
+#bossTable button:active {
+  transform: scale(0.95);
+}
+
+
+/* Таблица */
+#bossTable {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #1A1A1A;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #333333; /* Темная граница для всей таблицы */
+}
+
+#bossTable th, #bossTable td {
+  border: 1px solid #333333; /* Темные границы ячеек */
+  padding: 8px;
+  text-align: center;
+}
+
+#bossTable tbody td:first-child {
+  text-align: left;
+}
+
+/* Подсветка заголовков */
+#bossTable th {
+  background-color: #222222; /* Очень темный фон для заголовков */
+  color: white;
+}
+
+/* Четные строки */
+#bossTable tbody tr:nth-child(even) {
+  background-color: #111111; /* Очень темный оттенок для четных строк */
+}
+
+/* Нечетные строки */
+#bossTable tbody tr:nth-child(odd) {
+  background-color: #1a1a1a; /* Темный серый оттенок для нечетных строк */
+}
+
+/* Мягкая подсветка для ближайших боссов */
+.highlight {
+  background-color: rgba(235, 64, 52, 0.2) !important; /* Мягкий красный с прозрачностью */
+}
