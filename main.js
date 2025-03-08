@@ -1,11 +1,12 @@
 // Устанавливаем WebSocket соединение
-const socket = new WebSocket('wss://pw-boss-timer.koyeb.app/');
-//const socket = new WebSocket('ws://localhost:8080');
+//const socket = new WebSocket('https://pw-boss-timer.koyeb.app/');
+const socket = new WebSocket('ws://localhost:8080');
 
 // Открытие WebSocket соединения
 socket.addEventListener('open', () => {
     console.log('WebSocket подключен');
     // Здесь можно запросить текущие данные сразу после подключения
+    socket.send(JSON.stringify({ action: 'getBosses' }));
 });
 
 socket.addEventListener('close', () => {
@@ -20,33 +21,12 @@ socket.addEventListener('error', (event) => {
 socket.onmessage = function(event) {
     const data = JSON.parse(event.data);
     
-    console.log('Получены данные от сервера:', data);
     if (data.type === 'bosses') {
         bosses = data.bosses;  // Сохраняем данные о боссах
         console.log('Данные о боссах:', bosses);  // Убедитесь, что данные приходят
+        loadBosses(data.bosses);  // Загружаем данные в таблицу
     }
 };
-
-// Обработчик получения сообщений от сервера
-socket.addEventListener('message', (event) => {
-    let data;
-    try {
-        data = JSON.parse(event.data); // Преобразуем строку в объект
-    } catch (e) {
-        console.error('Ошибка парсинга данных', e);
-        return;
-    }
-
-    if (data && data.type === 'bosses') {
-        loadBosses(data.bosses); // Загружаем данные о боссах в таблицу
-        updateNearestBosses(data.bosses); // Обновление ближайших боссов
-    } else if (data && data.status === 'success') {
-        console.log('Операция прошла успешно!');
-    } else {
-        console.error('Неизвестный тип данных:', data);
-    }
-});
-
 
 // Функция для добавления босса через WebSocket
 function addBoss() {
@@ -62,8 +42,9 @@ function addBoss() {
     const firstShiftTime = new Date(currentTime.getTime() + bossShift * 60000);
     const secondShiftTime = new Date(firstShiftTime.getTime() + bossShift * 60000);
 
-    const timeString1 = firstShiftTime.toLocaleTimeString('ru-RU', { hour12: false });
-    const timeString2 = secondShiftTime.toLocaleTimeString('ru-RU', { hour12: false });
+    // Формируем время в формате ISO 8601
+    const timeString1 = firstShiftTime.toISOString();
+    const timeString2 = secondShiftTime.toISOString();
 
     socket.send(JSON.stringify({
         action: 'add',
@@ -117,10 +98,22 @@ function loadBosses(bosses) {
     if (bosses && bosses.length > 0) {
         bosses.forEach(boss => {
             const row = document.createElement('tr');
+            
+            // Функция для отображения времени в локальном формате
+            const formatTimeFromISO = (isoString) => {
+                if (!isoString) return '--:--:--';  // Если строка не задана, возвращаем "недоступно"
+                const date = new Date(isoString);
+            
+                // Проверяем, является ли date валидной датой
+                if (isNaN(date.getTime())) return '--:--:--';  // Если дата невалидна, возвращаем "недоступно"
+            
+                return date.toLocaleTimeString('ru-RU', { hour12: false });
+            };
+
             row.innerHTML = `
                 <td>${boss.name}</td>
-                <td>${boss.time1}</td>
-                <td>${boss.time2}</td>
+                <td>${formatTimeFromISO(boss.time1)}</td>
+                <td>${formatTimeFromISO(boss.time2)}</td>
                 <td><button onclick="updateBossTime('${boss.name}', '${boss.shift}')">Обновить</button></td>
                 <td><button onclick="resetTime('${boss.name}')">Удалить время</button></td>
             `;
@@ -132,6 +125,11 @@ function loadBosses(bosses) {
         tableBody.appendChild(noDataRow);
     }
 }
+
+const formatTimeFromISO = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleTimeString('ru-RU', { hour12: false });
+};
 
 let bosses = [];  // Инициализация глобальной переменной для хранения данных о боссах
 
@@ -145,12 +143,11 @@ function updateBossTime(bossName, shift) {
     const bossData = bosses.find(boss => boss.name === bossName);
     if (!bossData) {
         console.error('Босс не найден в данных:', bossName);
-        console.log('Все боссы:', bosses);
         return;
     }
 
     // Получаем локальное время
-    const localTime = new Date().toTimeString().slice(0, 8);
+    const localTime = new Date().toISOString();
 
     // Обновляем время с учётом сдвига
     console.log('Обновление времени для босса:', bossName);
@@ -179,19 +176,13 @@ function calculateShiftedTime(time, shift) {
     if (!time || !shift) return time;  // Если времени или сдвига нет, возвращаем исходное время
 
     // Преобразуем время в объект Date (чтобы работать с локальной временной зоной)
-    const [hours, minutes, seconds] = time.split(':');
-    const localTime = new Date();
-    localTime.setHours(hours, minutes, seconds, 0);  // Устанавливаем только время (без даты)
+    const localTime = new Date(time);  // Используем ISO строку для преобразования в Date объект
 
     // Применяем сдвиг
     localTime.setMinutes(localTime.getMinutes() + parseInt(shift)); 
 
-    // Возвращаем время в формате HH:MM:SS
-    const shiftedHours = String(localTime.getHours()).padStart(2, '0');
-    const shiftedMinutes = String(localTime.getMinutes()).padStart(2, '0');
-    const shiftedSeconds = String(localTime.getSeconds()).padStart(2, '0');
-
-    return `${shiftedHours}:${shiftedMinutes}:${shiftedSeconds}`;
+    // Возвращаем время в формате ISO 8601
+    return localTime.toISOString();
 }
 
 // Функция для обновления ближайших боссов
@@ -202,8 +193,8 @@ function updateNearestBosses(bosses) {
     let allBossTimes = [];
 
     for (let boss of bosses) {
-        let time1 = parseBossTime(boss.time1);
-        let time2 = parseBossTime(boss.time2);
+        let time1 = new Date(boss.time1);
+        let time2 = new Date(boss.time2);
 
         if (time1 > now) allBossTimes.push({ name: boss.name, time: time1 });
         if (time2 > now) allBossTimes.push({ name: boss.name, time: time2 });
@@ -219,17 +210,19 @@ function updateNearestBosses(bosses) {
     const secondBoss = allBossTimes[1] || null;
 
     document.getElementById('nextBoss1').textContent = firstBoss ? `${firstBoss.name} - ${formatTime(firstBoss.time)}` : 'Нет ближайших боссов';
-    document.getElementById('nextBoss2').textContent = secondBoss ? `${secondBoss.name} - ${formatTime(secondBoss.time)}` : 'Нет второго босса';
+    document.getElementById('nextBoss2').textContent = secondBoss ? `${secondBoss.name} - ${formatTime(secondBoss.time)}` : 'Нет ближайших боссов';
 }
 
-// Функция парсинга времени (из строки в Date)
-function parseBossTime(timeStr) {
-    if (!timeStr) return null;
-    const [hours, minutes, seconds] = timeStr.split(':').map(Number);
-    const time = new Date();
-    time.setHours(hours, minutes, seconds, 0);
-    return time;
+// Функция для преобразования времени в объект Date
+function parseBossTime(time) {
+    if (time === '--:--:--') return null; // Проверяем и возвращаем null, если время равно '--:--:--'
+    const [hours, minutes, seconds] = time.split(':').map(Number);
+    if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) return null; // Проверяем на NaN
+    const currentDate = new Date();
+    currentDate.setHours(hours, minutes, seconds, 0);
+    return currentDate;
 }
+
 
 // Функция форматирования времени
 function formatTime(date) {
@@ -244,6 +237,7 @@ function getTimeInSeconds(timeStr) {
     return Math.floor(date.getTime() / 1000);
 }
 
+// Обновление текущего времени
 // Обновление текущего времени
 function updateCurrentTime() {
     const currentTimeElement = document.getElementById('currentTime');
@@ -296,7 +290,6 @@ function highlightNearestBosses() {
     });
 }
 
-// Функция для воспроизведения звука за 2 минуты до респавна
 // Функция для воспроизведения звука за 2 минуты до респавна
 // Переменная для проверки, был ли уже проигран звук
 let soundPlayed = false;
@@ -377,3 +370,4 @@ setInterval(() => {
 }, 1000);
 
 setInterval(() => updateNearestBosses(bosses), 1000); // Запускаем обновление каждую секунду
+
