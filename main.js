@@ -1,6 +1,6 @@
 // Устанавливаем WebSocket соединение
-const socket = new WebSocket('https://pw-boss-timer.koyeb.app/');
-//const socket = new WebSocket('ws://localhost:8080');
+//const socket = new WebSocket('https://pw-boss-timer.koyeb.app/');
+const socket = new WebSocket('ws://localhost:8080');
 
 // Открытие WebSocket соединения
 socket.addEventListener('open', () => {
@@ -185,7 +185,6 @@ function calculateShiftedTime(time, shift) {
     return localTime.toISOString();
 }
 
-// Функция для обновления ближайших боссов
 function updateNearestBosses(bosses) {
     const now = new Date();
     document.getElementById('currentTime').textContent = now.toTimeString().slice(0, 8);
@@ -196,21 +195,26 @@ function updateNearestBosses(bosses) {
         let time1 = new Date(boss.time1);
         let time2 = new Date(boss.time2);
 
+        // Добавляем только те боссы, время которых не прошло
         if (time1 > now) allBossTimes.push({ name: boss.name, time: time1 });
         if (time2 > now) allBossTimes.push({ name: boss.name, time: time2 });
     }
 
-    // Сортируем по ближайшему времени
+    // Сортируем по времени
     allBossTimes.sort((a, b) => a.time - b.time);
-
-    // Убираем всех боссов, время которых уже прошло
-    allBossTimes = allBossTimes.filter(boss => boss.time > now);
 
     const firstBoss = allBossTimes[0] || null;
     const secondBoss = allBossTimes[1] || null;
 
-    document.getElementById('nextBoss1').textContent = firstBoss ? `${firstBoss.name} - ${formatTime(firstBoss.time)}` : 'Нет ближайших боссов';
-    document.getElementById('nextBoss2').textContent = secondBoss ? `${secondBoss.name} - ${formatTime(secondBoss.time)}` : 'Нет ближайших боссов';
+    // Отображаем ближайших боссов
+    document.getElementById('nextBoss1').textContent = firstBoss ? `${firstBoss.name} - ${formatTimeFromISO(firstBoss.time)}` : 'Нет ближайших боссов';
+    document.getElementById('nextBoss2').textContent = secondBoss ? `${secondBoss.name} - ${formatTimeFromISO(secondBoss.time)}` : 'Нет ближайших боссов';
+
+    // Звуковое предупреждение для первого босса, если время до респауна меньше 2 минут
+    if (firstBoss) {
+        const timeToRespawn = firstBoss.time - now;
+        playSoundAlert(timeToRespawn);  // Проверяем, нужно ли проиграть звук
+    }
 }
 
 // Функция для преобразования времени в объект Date
@@ -245,7 +249,6 @@ function updateCurrentTime() {
     currentTimeElement.textContent = currentTime;
 }
 
-// Функция для подсветки ближайших 2-х боссов
 function highlightNearestBosses() {
     const now = new Date();
     const tableBody = document.querySelector('#bossTable tbody');
@@ -256,12 +259,9 @@ function highlightNearestBosses() {
 
     // Функция для преобразования времени в объект Date
     function parseBossTime(time) {
-        if (time === '--:--:--') return null;
-        const [hours, minutes, seconds] = time.split(':').map(Number);
-        if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) return null;
-        const currentDate = new Date();
-        currentDate.setHours(hours, minutes, seconds, 0);
-        return currentDate;
+        if (!time || time === '--:--:--') return null;
+        const date = new Date(time); // Используем Date для парсинга ISO строки
+        return isNaN(date.getTime()) ? null : date; // Возвращаем дату, если она валидна
     }
 
     // Массив для хранения всех времен (первое и второе время каждого босса)
@@ -283,26 +283,28 @@ function highlightNearestBosses() {
 
     // Подсвечиваем два ближайших времени
     nearestTimes.forEach(item => {
-        const row = [...tableBody.rows].find(row => row.cells[0]?.textContent === item.boss.name);
+        const row = [...tableBody.rows].find(row => row.cells[0]?.textContent.trim() === item.boss.name.trim());
         if (row) {
             row.classList.add('highlight');
         }
     });
 }
 
-// Функция для воспроизведения звука за 2 минуты до респавна
-// Переменная для проверки, был ли уже проигран звук
-let soundPlayed = false;
+let soundPlayed = false;  // Переменная для отслеживания проигрыша звука
 
-// Функция для воспроизведения звука за 2 минуты до респавна
+// Функция для воспроизведения звука при респауне
 function playSoundAlert(timeToRespawn) {
-    const timeBeforeAlert = 2 * 60 * 1000; // 2 минуты в миллисекундах
-
-    // Проверяем, если время до респавна меньше или равно 2 минутам и звук еще не был проигран
-    if (timeToRespawn <= timeBeforeAlert && timeToRespawn > 0 && !soundPlayed) {
+    // Если до респауна меньше 2 минут и звук еще не был проигран
+    if (timeToRespawn <= 2 * 60 * 1000 && timeToRespawn > 0 && !soundPlayed) {
         const audio = document.getElementById('alertSound');
-        audio.play();
-        soundPlayed = true; // Устанавливаем флаг, чтобы предотвратить повторное воспроизведение звука
+        audio.play().catch((error) => console.log('Audio play failed:', error));
+
+        soundPlayed = true;  // Отмечаем, что звук проигран
+    }
+
+    // После респауна сбрасываем флаг для следующего предупреждения
+    if (timeToRespawn <= 0) {
+        soundPlayed = false;
     }
 }
 
@@ -350,7 +352,7 @@ function checkBossTimes() {
 
     const nextBoss = allBossTimes[0] || null;
 
-    // Если есть ближайший босс и время до респавна менее 2 минут
+    // Если есть ближайший босс и время до респауна менее 2 минут
     if (nextBoss) {
         const timeToRespawn = nextBoss.time - now;
         playSoundAlert(timeToRespawn);  // Проверяем, нужно ли проиграть звук
@@ -363,11 +365,12 @@ window.onload = loadVolume;
 // Добавляем слушатель для изменения громкости
 document.getElementById('volumeControl').addEventListener('input', adjustVolume);
 
+// Интервал для обновления времени и проверки ближайших боссов
 setInterval(() => {
     updateCurrentTime();  // Обновляем таблицу
     highlightNearestBosses();  // Подсвечиваем ближайших 2-х боссов
     checkBossTimes();
 }, 1000);
 
+// Интервал для обновления ближайших боссов
 setInterval(() => updateNearestBosses(bosses), 1000); // Запускаем обновление каждую секунду
-
