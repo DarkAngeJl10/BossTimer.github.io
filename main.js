@@ -203,17 +203,20 @@ function updateNearestBosses(bosses) {
     // Сортируем по времени
     allBossTimes.sort((a, b) => a.time - b.time);
 
-    const firstBoss = allBossTimes[0] || null;
-    const secondBoss = allBossTimes[1] || null;
-
-    // Отображаем ближайших боссов
-    document.getElementById('nextBoss1').textContent = firstBoss ? `${firstBoss.name} - ${formatTimeFromISO(firstBoss.time)}` : 'Нет ближайших боссов';
-    document.getElementById('nextBoss2').textContent = secondBoss ? `${secondBoss.name} - ${formatTimeFromISO(secondBoss.time)}` : 'Нет ближайших боссов';
-
-    // Звуковое предупреждение для первого босса, если время до респауна меньше 2 минут
-    if (firstBoss) {
-        const timeToRespawn = firstBoss.time - now;
-        playSoundAlert(timeToRespawn);  // Проверяем, нужно ли проиграть звук
+    // Заполняем ближайших 5 боссов
+    for (let i = 0; i < 5; i++) {
+        const boss = allBossTimes[i] || null;
+        const bossElement = document.getElementById(`nextBoss${i + 1}`);
+        
+        if (boss) {
+            bossElement.textContent = `${boss.name} - ${formatTimeFromISO(boss.time)}`;
+            
+            // Звуковое предупреждение для первого босса, если время до респауна меньше 2 минут
+            const timeToRespawn = boss.time - now;
+            playSoundAlert(timeToRespawn);  // Проверяем, нужно ли проиграть звук
+        } else {
+            bossElement.textContent = 'Нет ближайших боссов';
+        }
     }
 }
 
