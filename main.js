@@ -1,6 +1,6 @@
 // Устанавливаем WebSocket соединение
 const socket = new WebSocket('https://pw-boss-timer.koyeb.app/');
-//const socket = new WebSocket('ws://localhost:8080');
+//cconst socket = new WebSocket('ws://localhost:8080');
 
 // Открытие WebSocket соединения
 socket.addEventListener('open', () => {
