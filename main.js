@@ -1,37 +1,40 @@
-// Устанавливаем WebSocket соединение
-const socket = new WebSocket('https://pw-boss-timer.koyeb.app/');
-//const socket = new WebSocket('ws://localhost:8080');
+const reconnectInterval = 100; // Время ожидания перед повторным подключением (5 секунд)
 
-// Открытие WebSocket соединения
-socket.addEventListener('open', () => {
-    console.log('WebSocket открыт');
-});
+function connectWebSocket() {
+    socket = new WebSocket('wss://pw-boss-timer.koyeb.app/');
+    //socket = new WebSocket('ws://localhost:8080');
 
-socket.addEventListener('close', () => {
-    console.log("Соединение потеряно. Попытка переподключения...");
-    reconnect();
-});
+    socket.addEventListener('open', () => {
+        console.log('WebSocket открыт');
+        socket.send(JSON.stringify({ action: 'getBosses' })); // Запрос данных о боссах после подключения
+    });
 
-socket.addEventListener('error', (event) => {
-    console.log('WebSocket error: ', event);
-});
+    socket.addEventListener('message', (event) => {
+        try {
+            const data = JSON.parse(event.data);
+            if (data.status === 'connected') {
+                console.log('WebSocket подключен');
+            }
+            if (data.type === 'bosses') {
+                console.log('Данные о боссах:', data.bosses);
+                bosses = data.bosses;
+                loadBosses(data.bosses);
+            }
+        } catch (error) {
+            console.error('Ошибка обработки данных:', error);
+        }
+    });
 
-socket.onmessage = function(event) {
-    const data = JSON.parse(event.data);
+    socket.addEventListener('close', (event) => {
+        console.log(`Соединение закрыто (код ${event.code}). Переподключение через ${reconnectInterval / 1000} секунд...`);
+        setTimeout(connectWebSocket, reconnectInterval);
+    });
 
-    // Если сервер прислал сообщение о статусе подключения
-    if (data.status === 'connected') {
-        console.log('WebSocket подключен');
-        socket.send(JSON.stringify({ action: 'getBosses' }));
-    }
-    
-    // Обрабатываем другие данные, если они есть
-    if (data.type === 'bosses') {
-        bosses = data.bosses;  // Сохраняем данные о боссах
-        console.log('Данные о боссах:', bosses);  // Убедитесь, что данные приходят
-        loadBosses(data.bosses);  // Загружаем данные в таблицу
-    }
-};
+    socket.addEventListener('error', (event) => {
+        console.error('WebSocket ошибка:', event);
+        socket.close(); // Принудительно закрываем, чтобы сработало `onclose` и начался процесс переподключения
+    });
+}
 
 // Функция для добавления босса через WebSocket
 function addBoss() {
@@ -155,7 +158,8 @@ let bosses = [];  // Инициализация глобальной перем�
 
 // Функция для обновления времени босса с учётом сдвига
 function updateBossTime(bossName, shift) {
-    if (bosses.length === 0) {
+
+    if (!Array.isArray(bosses) || bosses.length === 0) {
         console.error('Данные о боссах ещё не загружены!');
         return;
     }
@@ -411,3 +415,5 @@ setInterval(() => {
 
 // Интервал для обновления ближайших боссов
 setInterval(() => updateNearestBosses(bosses), 1000); // Запускаем обновление каждую секунду
+
+connectWebSocket();
