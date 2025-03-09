@@ -1,6 +1,6 @@
 // Устанавливаем WebSocket соединение
-const socket = new WebSocket('https://pw-boss-timer.koyeb.app/');
-//const socket = new WebSocket('ws://localhost:8080');
+//const socket = new WebSocket('https://pw-boss-timer.koyeb.app/');
+const socket = new WebSocket('ws://localhost:8080');
 
 // Открытие WebSocket соединения
 socket.addEventListener('open', () => {
@@ -86,7 +86,8 @@ function resetTime(bossName) {
     }));
 }
 
-// Функция для загрузки всех боссов в таблицу
+// bosses.sort((a, b) => a.shift - b.shift); // Сортировка по числовому значению shift (по возрастанию)
+
 function loadBosses(bosses) {
     const tableBody = document.querySelector('#bossTable tbody');
     if (!tableBody) {
@@ -96,6 +97,9 @@ function loadBosses(bosses) {
     tableBody.innerHTML = ''; // Очищаем таблицу перед добавлением новых данных
 
     if (bosses && bosses.length > 0) {
+        // Сортируем боссов по ключу shift (по возрастанию)
+        bosses.sort((a, b) => a.shift - b.shift);
+
         bosses.forEach(boss => {
             const row = document.createElement('tr');
             
@@ -112,7 +116,7 @@ function loadBosses(bosses) {
 
             row.innerHTML = `
                 <td>${boss.name}</td>
-                <td>${formatTimeFromISO(boss.time1)}</td>
+                <td class="table_time">${formatTimeFromISO(boss.time1)}</td>
                 <td>${formatTimeFromISO(boss.time2)}</td>
                 <td><button onclick="updateBossTime('${boss.name}', '${boss.shift}')">Обновить</button></td>
                 <td><button onclick="resetTime('${boss.name}')">Удалить время</button></td>
@@ -125,6 +129,17 @@ function loadBosses(bosses) {
         tableBody.appendChild(noDataRow);
     }
 }
+
+
+// Функция для отправки обновленных данных босса на сервер через WebSocket
+function updateBossInDB(updatedData) {
+    // Отправляем данные через WebSocket сервер
+    socket.send(JSON.stringify({
+        action: 'updateBoss',
+        data: updatedData
+    }));
+}
+
 
 const formatTimeFromISO = (isoString) => {
     const date = new Date(isoString);
@@ -258,7 +273,7 @@ function highlightNearestBosses() {
     if (!tableBody || bosses.length === 0) return;
 
     // Сбрасываем подсветку у всех строк
-    [...tableBody.rows].forEach(row => row.classList.remove('highlight'));
+    [...tableBody.rows].forEach(row => row.classList.remove('highlight', 'pastThreshold'));
 
     // Функция для преобразования времени в объект Date
     function parseBossTime(time) {
@@ -270,19 +285,32 @@ function highlightNearestBosses() {
     // Массив для хранения всех времен (первое и второе время каждого босса)
     let bossTimes = [];
 
-    // Добавляем каждый босс с его временем
+    // Добавляем каждого босса с его временем
     bosses.forEach(boss => {
         const time1 = parseBossTime(boss.time1);
-
-        // Добавляем босса, если у него есть хотя бы одно время
-        if (time1) bossTimes.push({ boss, time: time1, shift: 'first' });
+        if (time1) {
+            bossTimes.push({ boss, time: time1, shift: 'first' });
+        }
     });
 
-    // Сортируем все времена по ближайшему к текущему времени
+    // Сортируем всех боссов по времени
     bossTimes.sort((a, b) => Math.abs(now - a.time) - Math.abs(now - b.time));
 
-    // Получаем два ближайших времени
-    const nearestTimes = bossTimes.slice(0, 2);
+    // Сначала обрабатываем боссов, чье время уже прошло за порог
+    bossTimes.forEach(item => {
+        const row = [...tableBody.rows].find(row => row.cells[0]?.textContent.trim() === item.boss.name.trim());
+        if (row) {
+            const isPastThreshold = item.time < now; // Проверяем, прошло ли время за порог
+
+            // Если время прошло, подсвечиваем в желтый, но не учитываем в ближайших
+            if (isPastThreshold) {
+                row.classList.add('pastThreshold');
+            }
+        }
+    });
+
+    // Получаем два ближайших времени, которые еще не прошли за порог
+    const nearestTimes = bossTimes.filter(item => item.time >= now).slice(0, 2);
 
     // Подсвечиваем два ближайших времени
     nearestTimes.forEach(item => {
@@ -292,6 +320,7 @@ function highlightNearestBosses() {
         }
     });
 }
+
 
 let soundPlayed = false;  // Переменная для отслеживания проигрыша звука
 
@@ -360,8 +389,8 @@ function checkBossTimes() {
         const timeToRespawn = nextBoss.time - now;
         playSoundAlert(timeToRespawn);  // Проверяем, нужно ли проиграть звук
     }
-}
 
+}
 // Загружаем громкость при загрузке страницы
 window.onload = loadVolume;
 
