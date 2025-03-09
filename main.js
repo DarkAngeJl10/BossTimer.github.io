@@ -4,9 +4,8 @@ const socket = new WebSocket('ws://localhost:8080');
 
 // Открытие WebSocket соединения
 socket.addEventListener('open', () => {
-    console.log('WebSocket подключен');
+    console.log('WebSocket открыт');
     // Здесь можно запросить текущие данные сразу после подключения
-    socket.send(JSON.stringify({ action: 'getBosses' }));
 });
 
 socket.addEventListener('close', () => {
@@ -20,7 +19,14 @@ socket.addEventListener('error', (event) => {
 
 socket.onmessage = function(event) {
     const data = JSON.parse(event.data);
+
+    // Если сервер прислал сообщение о статусе подключения
+    if (data.status === 'connected') {
+        console.log('WebSocket подключен');
+        socket.send(JSON.stringify({ action: 'getBosses' }));
+    }
     
+    // Обрабатываем другие данные, если они есть
     if (data.type === 'bosses') {
         bosses = data.bosses;  // Сохраняем данные о боссах
         console.log('Данные о боссах:', bosses);  // Убедитесь, что данные приходят
