@@ -1,11 +1,10 @@
 // Устанавливаем WebSocket соединение
-const socket = new WebSocket('https://pw-boss-timer.koyeb.app/');
-//cconst socket = new WebSocket('ws://localhost:8080');
+//const socket = new WebSocket('https://pw-boss-timer.koyeb.app/');
+const socket = new WebSocket('ws://localhost:8080');
 
 // Открытие WebSocket соединения
 socket.addEventListener('open', () => {
     console.log('WebSocket открыт');
-    setTimeout(() => {}, 1000);
 });
 
 socket.addEventListener('close', () => {
@@ -18,30 +17,19 @@ socket.addEventListener('error', (event) => {
 });
 
 socket.onmessage = function(event) {
-    try {
-        const data = JSON.parse(event.data);
+    const data = JSON.parse(event.data);
 
-        // Если сервер прислал сообщение о статусе подключения
-        if (data.status === 'connected') {
-            console.log('WebSocket подключен');
-            socket.send(JSON.stringify({ action: 'getBosses' }));
-            return;  // Выход из функции, так как дальнейшая обработка не требуется
-        }
-
-        // Обрабатываем данные о боссах
-        if (data.type === 'bosses' && Array.isArray(data.bosses)) {
-            bosses = data.bosses;  // Сохраняем данные о боссах
-            console.log('Данные о боссах:', bosses);  // Убедитесь, что данные приходят
-            loadBosses(data.bosses);  // Загружаем данные в таблицу
-        }
-        
-        // Если приходят неожиданные данные
-        else {
-            console.warn('Неизвестный тип данных:', data);
-        }
-
-    } catch (error) {
-        console.error('Ошибка обработки сообщения WebSocket:', error);
+    // Если сервер прислал сообщение о статусе подключения
+    if (data.status === 'connected') {
+        console.log('WebSocket подключен');
+        socket.send(JSON.stringify({ action: 'getBosses' }));
+    }
+    
+    // Обрабатываем другие данные, если они есть
+    if (data.type === 'bosses') {
+        bosses = data.bosses;  // Сохраняем данные о боссах
+        console.log('Данные о боссах:', bosses);  // Убедитесь, что данные приходят
+        loadBosses(data.bosses);  // Загружаем данные в таблицу
     }
 };
 
