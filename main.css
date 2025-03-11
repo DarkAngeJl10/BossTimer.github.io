@@ -91,12 +91,25 @@ body {
 }
 
 /* Блок с ближайшими боссами */
+.Volume {
+  background-color: #1E1E1E;
+  color: #E0E0E0;
+  padding: 0.5rem 0.5rem 0rem 0.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-size: 16px;
+  line-height: 1.6;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Блок с ближайшими боссами */
 .bossInfo {
   background-color: #1E1E1E;
   color: #E0E0E0;
-  padding: 15px;
+  padding: 0.5rem 0.5rem 0rem 0.5rem;
   border-radius: 8px;
-  margin-top: 20px;
+  margin-top: 1rem;
   font-size: 16px;
   line-height: 1.6;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -105,13 +118,46 @@ body {
 /* Заголовок блока */
 .bossInfo h3 {
   font-size: 18px;
-  margin-bottom: 10px;
+  padding: 0rem;
+  margin: 0rem;
   color: #FFD700;
 }
+
+.local-time {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-bottom: 2rem;
+}
+
+.local-time p:first-child {
+  margin: 1rem 0rem 0.5rem 0rem;
+  font-size: large;
+}
+
+.local-time p {
+  margin: 0rem;
+}
+
+.local-time p span{
+  margin: 0rem;
+  font-weight:bolder;
+  font-size:x-large;
+  margin-bottom: 2rem;
+}
+
 
 /* Время выделено другим цветом */
 .bossInfo .time {
   color: #FF6B6B;
+  font-weight: bold;
+}
+
+/* Время выделено другим цветом */
+.bossInfo .current-time {
+  color: #4D96FF;
   font-weight: bold;
 }
 
