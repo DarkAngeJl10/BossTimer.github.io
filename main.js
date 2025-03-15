@@ -13,28 +13,29 @@ document.addEventListener('DOMContentLoaded', function () {
       icons.forEach(function (icon) {
         // Обработчик для наведения
         icon.addEventListener('mouseenter', function () {
-          const infoMenu = icon.querySelector('.info-menu');
-  
-          // Получаем координаты меню и контейнера
-          const rect = infoMenu.getBoundingClientRect();
-          const viewportWidth = window.innerWidth;
-          const container = icon.closest('td'); // Столбец в таблице
-          const containerRect = container.getBoundingClientRect();
-  
-          // Проверка, не выходит ли меню за пределы контейнера по правому краю
-          if (rect.left + rect.width > containerRect.right) {
-            const overflow = (rect.left + rect.width) - containerRect.right;
-            infoMenu.style.left = `-${overflow + 10}px`; // Сдвигаем меню влево
-          }
-  
-          // Проверка, не выходит ли меню за пределы контейнера по нижнему краю
-          if (rect.bottom > containerRect.bottom) {
-            const overflow = rect.bottom - containerRect.bottom;
-            infoMenu.style.top = `-${overflow + 10}px`; // Сдвигаем меню вверх
-          }
-  
-          // Показываем меню
-          infoMenu.classList.add('visible');
+        const infoMenu = icon.querySelector('.info-menu');
+
+        // Получаем координаты меню и контейнера
+        const rect = infoMenu.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        const container = icon.closest('td'); // Столбец в таблице
+        const containerRect = container.getBoundingClientRect();
+
+        // Проверка, не выходит ли меню за пределы контейнера по правому краю
+        if (rect.left + rect.width > containerRect.right) {
+        const overflow = (rect.left + rect.width) - containerRect.right;
+        infoMenu.style.left = `-${overflow + 10}px`; // Сдвигаем меню влево
+        }
+
+        // Проверка, не выходит ли меню за пределы контейнера по нижнему краю
+        if (rect.bottom > containerRect.bottom) {
+        const overflow = rect.bottom - containerRect.bottom;
+        infoMenu.style.top = `-${overflow - 14}px`; // Сдвигаем меню вверх
+        }
+
+
+        // Показываем меню
+        infoMenu.classList.add('visible');
         });
   
         // Обработчик для убирания меню при уходе с иконки
