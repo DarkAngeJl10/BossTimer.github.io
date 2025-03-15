@@ -100,7 +100,7 @@ function logout() {
 
 function connectWebSocket() {
     //socket = new WebSocket('wss://pw-boss-timer.koyeb.app/');
-    socket = new WebSocket(`${wsdomain}`);
+    socket = new WebSocket(`${wsdomain}/server.php`);
 
     socket.addEventListener('open', () => {
         //console.log('WebSocket открыт');
