@@ -1,5 +1,6 @@
 const reconnectInterval = 100; // Время ожидания перед повторным подключением (5 секунд)
-const domain = "https://pw-boss-timer.koyeb.app";
+const apidomain = "https://pw-boss-timer.koyeb.app/api";
+const wsdomain = "wss://your-koyeb-url.com/ws";
 let socket;
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Проверка на наличие сессионного токена
 document.addEventListener("DOMContentLoaded", async () => {
-    let response = await fetch(`${domain}:80/check_session.php`);
+    let response = await fetch(`${apidomain}/check_session.php`);
     let result = await response.json();
 
     if (!result.success) {
@@ -82,7 +83,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 function logout() {
-    fetch(`${domain}:80/logout.php`).then(() => {
+    fetch(`${apidomain}/logout.php`).then(() => {
         window.location.href = "index.html"; // Перенаправляем на страницу логина
     });
 }
@@ -92,7 +93,7 @@ function logout() {
 
 function connectWebSocket() {
     //socket = new WebSocket('wss://pw-boss-timer.koyeb.app/');
-    socket = new WebSocket('ws://${domain}:8080');
+    socket = new WebSocket(`${wsdomain}`);
 
     socket.addEventListener('open', () => {
         //console.log('WebSocket открыт');

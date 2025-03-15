@@ -1,8 +1,8 @@
-const domain = "https://pw-boss-timer.koyeb.app";
+const apidomain = "https://pw-boss-timer.koyeb.app/api";
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
-        let response = await fetch(`${domain}:80/csrf_token.php`, {
+        let response = await fetch(`${apidomain}/csrf_token.php`, {
         //let response = await fetch("/../backend/api/csrf_token.php", {
             method: "GET",
             headers: {
@@ -32,7 +32,7 @@ document.querySelector("#loginForm").addEventListener("submit", async (e) => {
         console.log(`${key}: ${value}`);
     });
     
-    let response = await fetch(`${domain}:80/auth.php`, {
+    let response = await fetch(`${apidomain}/auth.php`, {
     //let response = await fetch("/../backend/api/auth.php", {
         method: "POST",
         body: formData,
