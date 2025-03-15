@@ -1,6 +1,6 @@
 const reconnectInterval = 100; // Время ожидания перед повторным подключением (5 секунд)
 const apidomain = "https://pw-boss-timer.koyeb.app/api";
-const wsdomain = "wss://your-koyeb-url.com/ws";
+const wsdomain = "wss://your-koyeb-url.com/websocket";
 let socket;
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -100,7 +100,7 @@ function logout() {
 
 function connectWebSocket() {
     //socket = new WebSocket('wss://pw-boss-timer.koyeb.app/');
-    socket = new WebSocket(`${wsdomain}/server.php`);
+    socket = new WebSocket(`${wsdomain}`);
 
     socket.addEventListener('open', () => {
         //console.log('WebSocket открыт');

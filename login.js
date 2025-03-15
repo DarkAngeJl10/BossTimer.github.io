@@ -27,11 +27,6 @@ document.querySelector("#loginForm").addEventListener("submit", async (e) => {
     
     let formData = new FormData(e.target);
 
-    // Логируем данные формы для проверки
-    formData.forEach((value, key) => {
-        console.log(`${key}: ${value}`);
-    });
-    
     let response = await fetch(`${apidomain}/auth.php`, {
     //let response = await fetch("/../backend/api/auth.php", {
         method: "POST",
