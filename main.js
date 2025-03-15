@@ -71,7 +71,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Проверка на наличие сессионного токена
 document.addEventListener("DOMContentLoaded", async () => {
-    let response = await fetch(`${apidomain}/check_session.php`);
+    let response = await fetch(`${apidomain}/check_session.php`, {
+        method: "GET",  // или POST, в зависимости от запроса
+        credentials: "include"  // Для отправки cookies с запросом
+    });
+    
     let result = await response.json();
 
     if (!result.success) {
@@ -83,12 +87,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 function logout() {
-    fetch(`${apidomain}/logout.php`).then(() => {
+    fetch(`${apidomain}/logout.php`, {
+        method: "GET", // или POST, если требуется
+        credentials: "include", // Отправляем куки для завершения сессии
+    }).then(() => {
         window.location.href = "index.html"; // Перенаправляем на страницу логина
+    }).catch(error => {
+        console.error("Ошибка при выходе:", error);
     });
 }
-
-
 
 
 function connectWebSocket() {
