@@ -1,107 +1,12 @@
 const reconnectInterval = 100; // Время ожидания перед повторным подключением (5 секунд)
-const domain = "https://pw-boss-timer.koyeb.app";
-let socket;
-
-document.addEventListener('DOMContentLoaded', function () {
-    // Функция для добавления обработчиков
-    function addIconEventListeners() {
-      const icons = document.querySelectorAll('.info-icon');
-  
-      icons.forEach(function (icon) {
-        // Обработчик для наведения
-        icon.addEventListener('mouseenter', function () {
-          const infoMenu = icon.querySelector('.info-menu');
-  
-          // Получаем координаты меню и контейнера
-          const rect = infoMenu.getBoundingClientRect();
-          const viewportWidth = window.innerWidth;
-          const container = icon.closest('td'); // Столбец в таблице
-          const containerRect = container.getBoundingClientRect();
-  
-          // Проверка, не выходит ли меню за пределы контейнера по правому краю
-          if (rect.left + rect.width > containerRect.right) {
-            const overflow = (rect.left + rect.width) - containerRect.right;
-            infoMenu.style.left = `-${overflow + 10}px`; // Сдвигаем меню влево
-          }
-  
-          // Проверка, не выходит ли меню за пределы контейнера по нижнему краю
-          if (rect.bottom > containerRect.bottom) {
-            const overflow = rect.bottom - containerRect.bottom;
-            infoMenu.style.top = `-${overflow + 10}px`; // Сдвигаем меню вверх
-          }
-  
-          // Показываем меню
-          infoMenu.classList.add('visible');
-        });
-  
-        // Обработчик для убирания меню при уходе с иконки
-        icon.addEventListener('mouseleave', function () {
-          const infoMenu = icon.querySelector('.info-menu');
-          infoMenu.classList.remove('visible');
-        });
-      });
-    }
-  
-    // Используем MutationObserver для отслеживания добавления новых элементов
-    const observer = new MutationObserver(function (mutationsList) {
-      mutationsList.forEach(function (mutation) {
-        if (mutation.type === 'childList') {
-          addIconEventListeners();  // Добавляем обработчики после добавления элементов
-        }
-      });
-    });
-  
-    // Убедимся, что контейнер для наблюдения существует
-    const targetNode = document.querySelector('.right-column'); // Например, для правой колонки
-    if (targetNode) {
-      const config = { childList: true, subtree: true };
-  
-      // Запускаем наблюдатель
-      observer.observe(targetNode, config);
-    } else {
-      console.error('Контейнер для наблюдения не найден!');
-    }
-  
-    // Добавляем обработчики для всех иконок при загрузке страницы
-    addIconEventListeners();
-  });
-  
-  
-
-// Проверка на наличие сессионного токена
-document.addEventListener("DOMContentLoaded", async () => {
-    let response = await fetch(`${domain}:80/check_session.php`);
-    let result = await response.json();
-
-    if (!result.success) {
-        window.location.href = "index.html"; // Перенаправление на страницу логина
-    } else {
-        window.username = result.username
-        document.getElementById("username").innerText = result.username;
-    }
-});
-
-function logout() {
-    fetch(`${domain}:80/logout.php`).then(() => {
-        window.location.href = "index.html"; // Перенаправляем на страницу логина
-    });
-}
-
-
-
 
 function connectWebSocket() {
-    //socket = new WebSocket('wss://pw-boss-timer.koyeb.app/');
-    socket = new WebSocket('ws://${domain}:8080');
+    socket = new WebSocket('wss://pw-boss-timer.koyeb.app/');
+    //socket = new WebSocket('ws://localhost:8080');
 
     socket.addEventListener('open', () => {
-        //console.log('WebSocket открыт');
-        const localTime = new Date().toISOString();
-        socket.send(JSON.stringify({
-            action: 'getBosses',
-            username: window.username,
-            localTime: localTime,
-        }));
+        console.log('WebSocket открыт');
+        socket.send(JSON.stringify({ action: 'getBosses' })); // Запрос данных о боссах после подключения
     });
 
     socket.addEventListener('message', (event) => {
@@ -111,7 +16,7 @@ function connectWebSocket() {
                 console.log('WebSocket подключен');
             }
             if (data.type === 'bosses') {
-                //console.log('Данные о боссах:', data.bosses);
+                console.log('Данные о боссах:', data.bosses);
                 bosses = data.bosses;
                 loadBosses(data.bosses);
             }
@@ -149,16 +54,20 @@ function addBoss() {
     const timeString1 = firstShiftTime.toISOString();
     const timeString2 = secondShiftTime.toISOString();
 
-    const localTime = new Date().toISOString();
-
     socket.send(JSON.stringify({
         action: 'add',
-        username: window.username,
         name: bossName,
         time1: timeString1,
         time2: timeString2,
-        shift: bossShift,
-        localTime: localTime,
+        shift: bossShift
+    }));
+}
+
+// Функция для обновления времени босса через WebSocket
+function updateTime(bossName) {
+    socket.send(JSON.stringify({
+        action: 'getShift',
+        name: bossName
     }));
 }
 
@@ -171,24 +80,17 @@ function deleteBoss() {
         return;
     }
 
-    const localTime = new Date().toISOString();
-
     socket.send(JSON.stringify({
         action: 'delete',
-        username: window.username,
-        name: deletebossName,
-        localTime: localTime,
+        name: deletebossName
     }));
 }
 
 // Функция для обнуления времени босса через WebSocket
 function resetTime(bossName) {
-    const localTime = new Date().toISOString();
     socket.send(JSON.stringify({
         action: 'resetTime',
-        username: window.username,
-        name: bossName,
-        localTime: localTime,
+        name: bossName
     }));
 }
 
@@ -220,45 +122,12 @@ function loadBosses(bosses) {
                 return date.toLocaleTimeString('ru-RU', { hour12: false });
             };
 
-            // Получаем последние действия для отображения в выпадающем меню
-            const lastActions = boss.actions && boss.actions.length > 0 ? boss.actions : null;
-
-            // Функция для форматирования типа действия
-            function getActionType(action) {
-                switch (action) {
-                case 'add':
-                    return 'Добавил босса';
-                case 'delete':
-                    return 'Удалил босса';
-                case 'update':
-                    return 'Обновил время';
-                case 'resetTime':
-                    return 'Удалил время';
-                default:
-                    return action;
-                }
-            }
-
-            // Создание выпадающего меню с историей действий
-            const actionHistory = lastActions ? lastActions.map(action => `
-                <p><strong>${action.username}</strong>: ${getActionType(action.action)} -- ${formatDateAndTime(action.timestamp)}</p>
-            `).join('') : '<p>Нет данных</p>';
-
             row.innerHTML = `
                 <td>${boss.name}</td>
                 <td class="table_time">${formatTimeFromISO(boss.time1)}</td>
                 <td>${formatTimeFromISO(boss.time2)}</td>
                 <td><button onclick="updateBossTime('${boss.name}', '${boss.shift}')">Обновить</button></td>
                 <td><button onclick="resetTime('${boss.name}')">Удалить время</button></td>
-                <td>
-                    <div class="info-icon">
-                        <i class="fas fa-info-circle"></i>
-                        <div class="info-menu">
-                            <p><strong>История изменений:</strong></p>
-                            ${actionHistory}
-                        </div>
-                    </div>
-                </td>
             `;
             tableBody.appendChild(row); // Добавляем строку в таблицу
         });
@@ -273,28 +142,12 @@ function loadBosses(bosses) {
 // Функция для отправки обновленных данных босса на сервер через WebSocket
 function updateBossInDB(updatedData) {
     // Отправляем данные через WebSocket сервер
-    const localTime = new Date().toISOString();
     socket.send(JSON.stringify({
         action: 'updateBoss',
-        username: window.username,
-        data: updatedData,
-        localTime: localTime,
+        data: updatedData
     }));
 }
 
-function formatDateAndTime(isoString) {
-    const date = new Date(isoString);
-  
-    const options = {
-      month: 'long', // Месяц
-      day: 'numeric', // Число месяца
-      hour: '2-digit', // Час
-      minute: '2-digit', // Минуты
-      second: '2-digit', // Секунды
-    };
-  
-    return date.toLocaleString('ru-RU', options); // Форматируем дату по русски
-  }
 
 const formatTimeFromISO = (isoString) => {
     const date = new Date(isoString);
@@ -321,23 +174,21 @@ function updateBossTime(bossName, shift) {
     const localTime = new Date().toISOString();
 
     // Обновляем время с учётом сдвига
-    //console.log('Обновление времени для босса:', bossName);
+    console.log('Обновление времени для босса:', bossName);
     const newTime1 = calculateShiftedTime(localTime, shift);
     const newTime2 = calculateShiftedTime(localTime, shift * 2);
 
     // Логируем обновлённые значения времени
-    //console.log('Новое время 1:', newTime1);
-    //console.log('Новое время 2:', newTime2);
+    console.log('Новое время 1:', newTime1);
+    console.log('Новое время 2:', newTime2);
 
     // Отправляем обновление на сервер
     const dataToSend = {
         action: 'update',
-        username: window.username,
         name: bossName,
         time1: newTime1,
         time2: newTime2,
-        shift: shift,
-        localTime: localTime,
+        shift: shift
     };
 
     // Отправляем данные через WebSocket
@@ -487,7 +338,7 @@ function playSoundAlert(timeToRespawn) {
     // Если до респауна меньше 2 минут и звук еще не был проигран
     if (timeToRespawn <= 2 * 60 * 1000 && timeToRespawn > 0 && !soundPlayed) {
         const audio = document.getElementById('alertSound');
-        audio.play().catch((error) => console.log('Загрузка звукового оповещения прекращена ошибкой:', error));
+        audio.play().catch((error) => console.log('Audio play failed:', error));
 
         soundPlayed = true;  // Отмечаем, что звук проигран
     }
@@ -549,7 +400,6 @@ function checkBossTimes() {
     }
 
 }
-
 // Загружаем громкость при загрузке страницы
 window.onload = loadVolume;
 

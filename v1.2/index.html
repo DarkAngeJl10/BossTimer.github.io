@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" sizes="32x32" href="favicon-32x32.png">
+  <link rel="stylesheet" href="main.css">
+  <title>Таймер для боссов</title>
+</head>
+<body>
+
+<div class="main-container">
+  <!-- Левая колонка -->
+  <div class="left-column">
+    <div class="header">
+      <h1>Таймер для боссов</h1>
+      <div class="BossController">
+        <button onclick="addBoss()">Добавить босса</button>
+        <button onclick="deleteBoss()">Удалить босса</button>
+      </div>
+    </div>
+
+    <div class="Volume">
+      <audio id="alertSound" src="signal.wav" preload="auto"></audio>
+
+      <!-- Бегунок для регулировки громкости -->
+      <label for="volumeControl">Громкость:</label>
+      <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1">
+      <span id="volumeLabel">100%</span>
+    </div>
+
+    <div class="bossInfo">
+      <h3>Ближайшие боссы:</h3>
+      <p>1 Босс: <span class="time" id="nextBoss1"></span></p>
+      <p>2 Босс: <span class="time" id="nextBoss2"></span></p>
+      <p>3 Босс: <span class="time" id="nextBoss3"></span></p>
+      <p>4 Босс: <span class="time" id="nextBoss4"></span></p>
+      <p>5 Босс: <span class="time" id="nextBoss5"></span></p>
+      <div class="local-time">
+        <p>Текущее время:</p>
+        <p> <span class="current-time" id="currentTime"></span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Правая колонка -->
+  <div class="right-column">
+    <table id="bossTable">
+      <thead>
+        <tr>
+          <th>Босс</th>
+          <th>Первый Респ</th>
+          <th>Второй Респ</th>
+          <th>Обновить время</th>
+          <th>Удалить время</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<script src="main.js"></script>
+
+</body>
+</html>

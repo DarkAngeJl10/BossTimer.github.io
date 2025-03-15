@@ -6,58 +6,31 @@ body {
   font-size: 16px;
   line-height: 1.5;
   margin: 0;
-  padding: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-h2 {
-  margin: 0px;
-}
-
-.head_container {
-  display: flex;
-  gap: 20px;
-  max-width: 1400px;
-  width: 100%;
-  margin-bottom: 2rem;
-  height: auto;
-}
-
-.head {
   padding: 20px;
   display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #1E1E1E;
-  /* height: 100%; */
-  border-radius: 8px;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100vh;
 }
 
 /* Основной контейнер для двух колонок */
 .main-container {
   display: flex;
   gap: 20px;
-  max-width: 1400px;
+  max-width: 1300px;
   width: 100%;
-  height: 88%;
 }
 
 /* Левая колонка */
 .left-column {
   flex: 1;
-  max-width: 25%;
+  max-width: 40%;
 }
 
 /* Правая колонка */
 .right-column {
   flex: 2;
-  max-width: 75%;
-  position: relative; /* Для правильного позиционирования выпадающего меню */
-  overflow: visible; /* Разрешаем элементам выходить за пределы контейнера */
+  max-width: 100%;
 }
 
 /* Заголовок */
@@ -86,7 +59,6 @@ h2 {
 }
 
 /* Кнопки */
-.button,
 .BossController button, 
 #bossTable button {
   background-color: #333333;
@@ -117,48 +89,6 @@ h2 {
 #bossTable button:active {
   transform: scale(0.95);
 }
-
-/* Стиль для контейнера с иконкой */
-.info-icon {
-  position: relative; /* Для правильного позиционирования вложенного меню */
-  display: inline-block;
-  cursor: pointer;
-}
-
-/* Стиль для выпадающего меню */
-.info-menu {
-  display: none;
-  position: absolute; /* Позиционирование меню относительно родителя */
-  top: 50%; /* Меню будет отображаться по вертикали по центру иконки */
-  right: 125%; /* Меню будет слева от иконки */
-  transform: translateY(-50%); /* Центрируем по вертикали */
-  min-width: 200px; /* Устанавливаем минимальную ширину для меню */
-  background-color: #333; /* Цвет фона */
-  color: white; /* Цвет текста */
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 10; /* Чтобы меню всегда было поверх других элементов */
-}
-
-/* Показываем меню при наведении */
-.info-icon:hover .info-menu {
-  display: block;
-}
-
-/* Стиль для иконки */
-.info-icon i {
-  font-size: 20px;
-  color: #03A9F4; /* Синий цвет для иконки */
-}
-
-/* Стиль для текста в меню */
-.info-menu p {
-  margin: 5px 0;
-  white-space: nowrap; /* Убираем переносы строк */
-}
-
-
 
 /* Блок с ближайшими боссами */
 .Volume {
