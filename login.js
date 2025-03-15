@@ -22,10 +22,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
+// Функция для получения или генерации deviceID
+function getDeviceID() {
+    if (!localStorage.getItem("deviceID")) {
+        localStorage.setItem("deviceID", crypto.randomUUID());
+    }
+    return localStorage.getItem("deviceID");
+}
+
 document.querySelector("#loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     
     let formData = new FormData(e.target);
+    formData.append("deviceID", getDeviceID()); // Добавляем deviceID в запрос
 
     let response = await fetch(`${apidomain}/auth.php`, {
     //let response = await fetch("/../backend/api/auth.php", {
