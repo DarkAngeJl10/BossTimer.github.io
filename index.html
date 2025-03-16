@@ -11,14 +11,22 @@
 <body>
 
 <div class="login-container">
-    <h2>Вход в систему</h2>
-    <form id="loginForm">
-        <input type="text" name="username" placeholder="Логин" required>
-        <input type="text" name="access_key" placeholder="Ключ (только при регистрации)">
-        <input type="hidden" name="csrf_token" id="csrf_token">
-        <button type="submit">Войти</button>
-    </form>
-    <p id="error-message"></p>
+    <div>
+        <h2>Вход в систему</h2>
+        <form id="loginForm">
+            <input type="text" name="username" placeholder="Логин" required>
+            <input type="text" name="access_key" placeholder="Ключ (только при регистрации)">
+            <input type="hidden" name="csrf_token" id="csrf_token">
+            <button type="submit">Войти</button>
+        </form>
+        <p id="error-message"></p>
+    </div>
+    <div class="info">
+    <a href="https://t.me/DarkZiga" target="_blank" class="boss-timer-link">
+        <span>BossTimer By DarkZiga</span>
+        <span>Доступ - @DarkZiga</span>
+    </a>
+    </div>
 </div>
 
 <script src="login.js"></script>
