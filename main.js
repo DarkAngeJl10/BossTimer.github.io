@@ -1,7 +1,8 @@
 const reconnectInterval = 100; // Время ожидания перед повторным подключением (5 секунд)
 const apidomain = "https://pw-boss-timer.koyeb.app/api";
 const wsdomain = "wss://pw-boss-timer.koyeb.app/websocket";
-//const apidomain = "localhost";
+//const apidomain = "/../backend/api/";
+//const wsdomain = "ws://localhost:8080";
 //const wsdomain = "ws://localhost:8080";
 let socket;
 
@@ -126,6 +127,9 @@ function connectWebSocket() {
                 bosses = data.bosses;
                 loadBosses(data.bosses);
             }
+            if (data.action === 'onlineUsers') { // Если сервер прислал список юзеров
+                updateOnlineUsers(data.users);
+            }
         } catch (error) {
             console.error('Ошибка обработки данных:', error);
         }
@@ -140,6 +144,30 @@ function connectWebSocket() {
         console.error('WebSocket ошибка:', event);
         socket.close(); // Принудительно закрываем, чтобы сработало `onclose` и начался процесс переподключения
     });
+}
+
+function updateOnlineUsers(users) {
+    const onlineList = document.getElementById("onlineUsers");
+    onlineList.innerHTML = users.map(user => `<li>${user}</li>`).join("");
+}
+
+
+// Функция для получения действий конкретного пользователя
+function getUserActions(username) {
+    // Предположим, что массив bosses уже существует, и каждый элемент имеет actions
+    const boss = bosses.find(boss => boss.username === username);
+    return boss ? boss.actions : []; // Возвращаем действия или пустой массив, если нет данных
+}
+
+// Функция для форматирования типа действия
+function getActionType(action) {
+    switch (action) {
+        case 'add': return 'Добавил босса';
+        case 'delete': return 'Удалил босса';
+        case 'update': return 'Обновил время';
+        case 'resetTime': return 'Удалил время';
+        default: return action;
+    }
 }
 
 // Функция для добавления босса через WebSocket
@@ -233,22 +261,6 @@ function loadBosses(bosses) {
 
             // Получаем последние действия для отображения в выпадающем меню
             const lastActions = boss.actions && boss.actions.length > 0 ? boss.actions : null;
-
-            // Функция для форматирования типа действия
-            function getActionType(action) {
-                switch (action) {
-                case 'add':
-                    return 'Добавил босса';
-                case 'delete':
-                    return 'Удалил босса';
-                case 'update':
-                    return 'Обновил время';
-                case 'resetTime':
-                    return 'Удалил время';
-                default:
-                    return action;
-                }
-            }
 
             // Создание выпадающего меню с историей действий
             const actionHistory = lastActions ? lastActions.map(action => `

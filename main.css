@@ -153,6 +153,12 @@ h2 {
   z-index: 10; /* Чтобы меню всегда было поверх других элементов */
 }
 
+/* Стиль для текста в меню */
+.info-menu p {
+  margin: 5px 0;
+  white-space: nowrap; /* Убираем переносы строк */
+}
+
 /* Показываем меню при наведении */
 .info-icon:hover .info-menu {
   display: block;
@@ -163,13 +169,6 @@ h2 {
   font-size: 20px;
   color: #03A9F4; /* Синий цвет для иконки */
 }
-
-/* Стиль для текста в меню */
-.info-menu p {
-  margin: 5px 0;
-  white-space: nowrap; /* Убираем переносы строк */
-}
-
 
 
 /* Блок с ближайшими боссами */
@@ -241,6 +240,40 @@ h2 {
 .bossInfo .current-time {
   color: #4D96FF;
   font-weight: bold;
+}
+
+.onlineUsersContainer {
+  background-color: #1E1E1E;
+  color: #E0E0E0;
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-size: 16px;
+  line-height: 1.6;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.onlineUsersContainer h3 {
+  font-size: 18px;
+  padding: 0rem;
+  margin: 0rem;
+  color: #FFD700;
+}
+
+.onlineUsers {
+  display: flex;
+  flex-wrap: wrap; /* Разрешаем элементы переходить на новую строку */
+  gap: 10px; /* Отступ между элементами */
+  margin-top: 0.5rem;
+  justify-content: space-between;
+  padding: 0px;
+}
+
+.onlineUsers li {
+  color: #4A90E2;
+  cursor: default;
+  flex: 0 0 48%; /* Каждый элемент будет занимать 45% ширины контейнера, оставляя место для второго элемента */
+  list-style: none;
 }
 
 /* Кнопки в таблице */

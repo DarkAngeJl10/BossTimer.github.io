@@ -1,4 +1,5 @@
 const apidomain = "https://pw-boss-timer.koyeb.app/api";
+//const apidomain = "/../backend/api/";
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
