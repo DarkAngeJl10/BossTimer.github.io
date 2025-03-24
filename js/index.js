@@ -1,3 +1,5 @@
+document.cookie = "<?php echo session_name(); ?>=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+
 document.addEventListener("DOMContentLoaded", async () => {
     try {
         let response = await fetch(`${window.apidomain}/csrf_token.php`, {
