@@ -117,6 +117,7 @@ async function saveRoles() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 initiator: window.username,
+                initiator_device_id: localStorage.getItem('deviceID'),
                 username: targetUsername,
                 roles: roles,
             })
@@ -275,6 +276,7 @@ async function deleteUserSelect() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 initiator: window.username,
+                initiator_device_id: localStorage.getItem('deviceID'),
                 selectedUser: selectedUser
             })
         });
@@ -404,6 +406,7 @@ async function deleteKeyAccess() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 initiator: window.username,
+                initiator_device_id: localStorage.getItem('deviceID'),
                 AccessKeys: AccessKeys
             })
         });
@@ -427,6 +430,7 @@ async function createKeyAccess() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 initiator: window.username,
+                initiator_device_id: localStorage.getItem('deviceID'),
             })
         });
 
