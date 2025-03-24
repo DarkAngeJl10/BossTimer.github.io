@@ -1,4 +1,4 @@
-document.cookie = "<?php echo session_name(); ?>=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+document.cookie = "<?php echo session_name(); ?>=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=pw-boss-timer.koyeb.app; secure; SameSite=None;";
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
