@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" sizes="16x16" href="favicon-16x16.png">
+    <link rel="icon" sizes="32x32" href="favicon-32x32.png">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/adminpanel.css">
+    <title>Таймер для боссов</title>
+</head>
+
+<body>
+
+    <header class="head_container">
+        <div class="head">
+            <h2><span id="username"></span></h2>
+            <a href="https://t.me/DarkZiga" target="_blank" class="boss-timer-link">BossTimer By DarkZiga</a>
+            <div>
+                <button id="Back" class="button" onclick="Back()">Назад</button>
+                <button class="button" onclick="logout()">Выйти</button>
+            </div>
+        </div>
+    </header>
+
+
+    <div class="main-container">
+        <div class="nav-bar bg-container">
+            <button class="tablink button" onclick="openTab(event, 'roles')">Роли</button>
+            <button class="tablink button" onclick="openTab(event, 'accessKeys')">Ключи доступа</button>
+            <button class="tablink button" onclick="openTab(event, 'createURL')" disabled>Создание сыллок (W.I.P)</button>
+            <button class="tablink button" onclick="openTab(event, 'bossSettings')" disabled>Настройка боссов (W.I.P)</button>
+            <button class="tablink button" onclick="openTab(event, 'DPKSystem')" disabled>ДКП Система (W.I.P)</button>
+            <button class="tablink button" onclick="openTab(event, 'localesSettings')" disabled>Настройка перевода (W.I.P)</button>
+        </div>
+
+        <div class="right-container">
+            <div id="roles" class="tabcontent">
+                <div class="bg-container Table-head-container">
+                    <span>Пользователи:
+                        <select id="userSelect" class="userSelect">
+                            <option class="userOptions" value="none">Выберите пользователя</option>
+                        </select>
+                    </span>
+                    <button id="deleteUserSelect" class="button" onclick="deleteUserSelect()" disabled>Удалить
+                        пользователя</button>
+                </div>
+                <div id="allRolesContainer" class="bg-container">
+                    <table id="rolesTable" class="table" border="1">
+                        <thead>
+                            <tr>
+                                <th class="thead-action"><button id="saveButton" class="button" onclick="saveRoles()"
+                                        disabled>Сохранить</button></th>
+                                <th class="thead">Роль</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div id="accessKeys" class="tabcontent">
+                <div class="bg-container Table-head-container">
+                    <button id="createKeyButton" class="button" onclick="createKeyAccess()">Добавить ключ</button>
+                </div>
+                <div class="bg-container">
+                    <table id="AccessKeyTable" class="table" border="1">
+                        <thead>
+                            <tr>
+                                <th class="thead-action"><button id="deleteKeyButton" class="button"
+                                        onclick="deleteKeyAccess()">Удалить</button></th>
+                                <th class="thead">Ключ доступа</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="other" class="tabcontent">
+                <div class="bg-container Table-head-container">
+                    <h2>W.I.P</h2>
+                    <button id="WIPButton" class="button" onclick="WIPAccess()">Удалить</button>
+                </div>
+                <table class="bg-container" class="table" border="1">
+                    <thead>
+                        <tr>
+                            <th>W.I.P</th>
+                            <th>W.I.P</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="locales/ru.js"></script>
+    <script src="js/adminpanel.js"></script>
+
+</body>
+
+</html>

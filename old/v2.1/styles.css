@@ -1,0 +1,96 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #121212; /* Темный фон страницы */
+    margin: 0;
+    color: #e0e0e0; /* Светлый цвет текста */
+}
+
+.login-container {
+    background: #1e1e1e; /* Темный фон контейнера */
+    width: 300px; /* Ширина контейнера */
+    padding: 40px; /* Увеличиваем внутренние отступы */
+    border-radius: 10px; /* Закругленные углы контейнера */
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5); /* Чуть больше тени */
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.info {
+    width: 100%;
+    height: auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.boss-timer-link {
+    text-decoration: none;
+    color: #00aaff; /* Цвет ссылки */
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.boss-timer-link span {
+    margin-top: 1rem;
+}
+
+.boss-timer-link:hover{
+    color: #ffaa00; /* Изменение цвета при наведении */
+}
+
+input, button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 15px 20px; /* Увеличиваем паддинги для увеличения размера полей */
+    font-size: 16px;
+    box-sizing: border-box;
+    background-color: #333; /* Темный фон для input и button */
+    color: #e0e0e0; /* Светлый цвет текста */
+    border: 1px solid #444; /* Темные рамки */
+    border-radius: 5px;
+}
+
+input::placeholder {
+    text-align: center;
+    font-size: 16px;
+    color: #888; /* Светло-серый цвет для placeholder */
+}
+
+button {
+    cursor: pointer;
+    background-color: #007bff; /* Синий фон для кнопки */
+    color: white; /* Белый текст на кнопке */
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3; /* Более темный синий при наведении */
+}
+
+#error-message {
+    color: #f44336; /* Красный цвет для ошибок */
+}
+
+.login-container::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background-color: #1e1e1e; /* Темный фон для обводки */
+    z-index: -1;
+    border-radius: 10px;
+}

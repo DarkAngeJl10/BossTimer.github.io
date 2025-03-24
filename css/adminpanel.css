@@ -1,0 +1,175 @@
+html {
+    font-size: 16px;
+}
+
+.bg-container {
+    background-color: #1E1E1E;
+    color: #E0E0E0;
+    padding: 0.5rem 0.5rem 0rem 0.5rem;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-top: 1rem;
+    line-height: 1.6;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.button {
+    font-size: 16px;
+}
+
+.button:disabled {
+    font-size: 16px;
+}
+
+.nav-bar {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-bar .button:nth-child(1) {
+    margin-top: 1rem;
+}
+
+.Table-head-container {
+    display: flex;
+    padding: 1rem;
+}
+
+.Table-head-container span {
+    font-weight: bold;
+    font-size: x-large;
+}
+
+.table .button {
+    font-size: 16px;
+    width: 100%;
+}
+
+.nav-bar .button {
+    margin: 0 0.5rem 1rem 0.5rem;
+    font-size: 16px;
+    width: 11rem;
+}
+
+.right-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.userSelect {
+    padding: 9.5px 13px;
+    background-color: rgba(51, 51, 51, 0.8);
+    color: #FFFFFF;
+    border: 1px solid #555555;
+    font-size: 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin: 0 2rem 0 0.5rem;
+}
+
+.userSelect:hover {
+    background-color: rgba(56, 56, 56, 1);
+    border-color: #666666;
+    cursor: pointer;
+}
+
+.userSelect:focus {
+    background-color: rgba(61, 61, 61, 1);
+    border-color: #777777;
+}
+
+.userOptions {
+    background-color: #303030;
+    color: #FFFFFF;
+}
+
+.userOptions:nth-child(even) {
+    background-color: #404040;
+}
+
+/* Общие стили для таблицы */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+th,
+td {
+    padding: 8px;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Стиль для первого столбца (с кнопкой "Удалить"), фиксированная ширина */
+.thead-action {
+    width: 120px;
+    text-align: center;
+    /* Выравнивание по центру для кнопки */
+}
+
+/* Применяем стиль ко всем столбцам, кроме первого */
+th:not(:first-child),
+td:not(:first-child) {
+    width: 100%;
+    text-align: left;
+}
+
+.accessKey {
+    cursor: pointer;
+    transition: opacity 0.15s ease-in-out; /* Плавное изменение прозрачности */
+}
+
+.accessKey.hidden {
+    opacity: 0; /* Полностью скрыто */
+}
+
+.accessKey:hover {
+    color: #888888;
+}
+
+.rolesSelect {
+    background-color: rgba(51, 51, 51, 0.8);
+    color: #FFFFFF;
+    border: 1px solid #555555;
+    font-size: 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    width: 100%;
+    padding: 6px 8px;
+}
+
+.rolesSelect:disabled {
+    background-color: #666666; /* Светло-серый фон для неактивной кнопки */
+    color: #999999; /* Более светлый цвет текста */
+    border: 1px solid #888888; /* Светлый бордер */
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.rolesSelect:focus {
+    background-color: rgba(61, 61, 61, 1);
+    border-color: #777777;
+}
+
+.rolesSelect:hover {
+    background-color: rgba(56, 56, 56, 0.9);
+    border-color: #666666;
+    cursor: pointer;
+}
+
+.rolesSelect:hover:disabled {
+    background-color: #666666;
+    border-color: #888888;
+    cursor: not-allowed;
+}
+
+.rolesSelectOptions {
+    background-color: #303030;
+    color: #FFFFFF;
+}
+
+.rolesSelectOptions:nth-child(even) {
+    background-color: #404040;
+}

@@ -1,0 +1,365 @@
+/* Общие стили */
+body {
+  background-color: #121212;
+  color: #E0E0E0;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+h2 {
+  margin: 0px;
+}
+
+.head_container {
+  display: flex;
+  gap: 20px;
+  max-width: 1400px;
+  width: 100%;
+  margin-bottom: 2rem;
+  height: auto;
+}
+
+.head {
+  padding: 20px;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #1E1E1E;
+  /* height: 100%; */
+  border-radius: 8px;
+}
+
+/* Основной контейнер для двух колонок */
+.main-container {
+  display: flex;
+  gap: 20px;
+  max-width: 1400px;
+  width: 100%;
+  height: 88%;
+}
+
+/* Левая колонка */
+.left-column {
+  flex: 1;
+  max-width: 25%;
+}
+
+/* Правая колонка */
+.right-column {
+  flex: 2;
+  max-width: 75%;
+  position: relative; /* Для правильного позиционирования выпадающего меню */
+  overflow: visible; /* Разрешаем элементам выходить за пределы контейнера */
+}
+
+/* Заголовок */
+.header {
+  text-align: center;
+  padding: 20px;
+  background-color: #1E1E1E;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  margin-bottom: 20px;
+}
+
+/* Название */
+.header h1 {
+  margin: 0;
+  font-size: 22px;
+  color: #FFD700;
+}
+
+.boss-timer-link {
+  text-decoration: none;
+  color: #00aaff; /* Цвет ссылки */
+  font-weight: bold;
+  transition: color 0.3s ease-in-out;
+}
+
+.boss-timer-link:hover {
+  color: #ffaa00; /* Изменение цвета при наведении */
+}
+
+/* Контейнер для кнопок */
+.BossController {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.button:disabled {
+  background-color: #666666; /* Светло-серый фон для неактивной кнопки */
+  color: #999999; /* Более светлый цвет текста */
+  border: 1px solid #888888; /* Светлый бордер */
+  cursor: not-allowed; /* Изменяем курсор на "недоступен" */
+}
+
+.button:hover {
+  background-color: #444444;
+}
+
+.button:disabled:hover {
+  background-color: #666666;
+}
+
+.button:active {
+  transform: scale(0.95);
+}
+
+.button:disabled:active {
+  transform: scale(1);
+}
+
+/* Кнопки */
+.button,
+.BossController button, 
+#bossTable button {
+  background-color: #333333;
+  color: #FFFFFF;
+  border: 1px solid #555555;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Меньшие кнопки в таблице */
+#bossTable button {
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 4px;
+}
+
+/* Анимация при нажатии */
+.BossController button:active,
+#bossTable button:active {
+  transform: scale(0.95);
+}
+
+/* Стиль для контейнера с иконкой */
+.info-icon {
+  position: relative; /* Для правильного позиционирования вложенного меню */
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Стиль для выпадающего меню */
+.info-menu {
+  display: none;
+  position: absolute; /* Позиционирование меню относительно родителя */
+  top: 50%; /* Меню будет отображаться по вертикали по центру иконки */
+  right: 125%; /* Меню будет слева от иконки */
+  transform: translateY(-50%); /* Центрируем по вертикали */
+  min-width: 200px; /* Устанавливаем минимальную ширину для меню */
+  background-color: #121212; /* Цвет фона */
+  color: white; /* Цвет текста */
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10; /* Чтобы меню всегда было поверх других элементов */
+}
+
+/* Стиль для текста в меню */
+.info-menu p {
+  margin: 5px 0;
+  white-space: nowrap; /* Убираем переносы строк */
+}
+
+/* Показываем меню при наведении */
+.info-icon:hover .info-menu {
+  display: block;
+}
+
+/* Стиль для иконки */
+.info-icon i {
+  font-size: 20px;
+  color: #03A9F4; /* Синий цвет для иконки */
+}
+
+
+/* Блок с ближайшими боссами */
+.Volume {
+  background-color: #1E1E1E;
+  color: #E0E0E0;
+  padding: 0.5rem 0.5rem 0rem 0.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-size: 16px;
+  line-height: 1.6;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Блок с ближайшими боссами */
+.bossInfo {
+  background-color: #1E1E1E;
+  color: #E0E0E0;
+  padding: 0.5rem 0.5rem 0rem 0.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-size: 16px;
+  line-height: 1.6;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Заголовок блока */
+.bossInfo h3 {
+  font-size: 18px;
+  padding: 0rem;
+  margin: 0rem;
+  color: #FFD700;
+}
+
+.local-time {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-bottom: 2rem;
+}
+
+.local-time p:first-child {
+  margin: 1rem 0rem 0.5rem 0rem;
+  font-size: large;
+}
+
+.local-time p {
+  margin: 0rem;
+}
+
+.local-time p span{
+  margin: 0rem;
+  font-weight:bolder;
+  font-size:x-large;
+  margin-bottom: 2rem;
+}
+
+
+/* Время выделено другим цветом */
+.bossInfo .time {
+  color: #FF6B6B;
+  font-weight: bold;
+}
+
+/* Время выделено другим цветом */
+.bossInfo .current-time {
+  color: #4D96FF;
+  font-weight: bold;
+}
+
+.onlineUsersContainer {
+  background-color: #1E1E1E;
+  color: #E0E0E0;
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-size: 16px;
+  line-height: 1.6;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.onlineUsersContainer h3 {
+  font-size: 18px;
+  padding: 0rem;
+  margin: 0rem;
+  color: #FFD700;
+}
+
+.onlineUsers {
+  display: flex;
+  flex-wrap: wrap; /* Разрешаем элементы переходить на новую строку */
+  gap: 10px; /* Отступ между элементами */
+  margin-top: 0.5rem;
+  justify-content: space-between;
+  padding: 0px;
+}
+
+.onlineUsers li {
+  color: #4A90E2;
+  cursor: default;
+  flex: 0 0 48%; /* Каждый элемент будет занимать 45% ширины контейнера, оставляя место для второго элемента */
+  list-style: none;
+}
+
+/* Кнопки в таблице */
+#bossTable button {
+  background-color: #333333;
+  color: #FFFFFF;
+  border: 1px solid #555555;
+  padding: 8px 12px;
+  font-size: 13px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  min-width: 100px; /* Фиксированная ширина для одинакового размера */
+  white-space: nowrap; /* Запрет на перенос */
+  text-align: center;
+}
+
+/* Ховер-эффект */
+#bossTable button:hover {
+  background-color: #444444;
+}
+
+/* Эффект при нажатии */
+#bossTable button:active {
+  transform: scale(0.95);
+}
+
+/* Таблица */
+#bossTable {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #1A1A1A;
+  border-radius: 8px;
+  border: 1px solid #333333; /* Темная граница для всей таблицы */
+}
+
+#bossTable th, #bossTable td {
+  border: 1px solid #333333; /* Темные границы ячеек */
+  padding: 8px;
+  text-align: center;
+}
+
+#bossTable tbody td:first-child {
+  text-align: left;
+}
+
+/* Подсветка заголовков */
+#bossTable th {
+  background-color: #222222; /* Очень темный фон для заголовков */
+  color: white;
+}
+
+/* Четные строки */
+#bossTable tbody tr:nth-child(even) {
+  background-color: #111111; /* Очень темный оттенок для четных строк */
+}
+
+/* Нечетные строки */
+#bossTable tbody tr:nth-child(odd) {
+  background-color: #1a1a1a; /* Темный серый оттенок для нечетных строк */
+}
+
+/* Мягкая подсветка для истекших боссов */
+.pastThreshold {
+  background-color: rgba(74, 89, 99, 0.5) !important; /* Более яркий темно-серый с голубым оттенком */
+}
+
+
+/* Мягкая подсветка для ближайших боссов */
+.highlight {
+  background-color: rgba(204, 85, 70, 0.2) !important; /* Мягкий красный с прозрачностью */
+}
