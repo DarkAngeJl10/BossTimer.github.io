@@ -40,6 +40,10 @@ html {
     font-size: x-large;
 }
 
+.Table-main-container {
+    padding: 1rem;
+}
+
 .table .button {
     font-size: 16px;
     width: 100%;
@@ -91,21 +95,15 @@ html {
 /* Общие стили для таблицы */
 .table {
     width: 100%;
+    overflow-x: auto; /* Добавляем горизонтальный скролл при необходимости */
     border-collapse: collapse;
-    table-layout: fixed;
-}
-
-th,
-td {
-    padding: 8px;
-    text-align: left;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 /* Стиль для первого столбца (с кнопкой "Удалить"), фиксированная ширина */
 .thead-action {
+    padding: 8px;
     width: 120px;
+    min-width: 120px;
     text-align: center;
     /* Выравнивание по центру для кнопки */
 }
@@ -113,8 +111,15 @@ td {
 /* Применяем стиль ко всем столбцам, кроме первого */
 th:not(:first-child),
 td:not(:first-child) {
+    flex: 1;
+    min-width: 120px;
+    max-width: 240px;
     width: 100%;
+    padding: 8px;
     text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .accessKey {
